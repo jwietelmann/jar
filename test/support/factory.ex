@@ -1,13 +1,11 @@
 defmodule JarTest.Factory do
   use ExMachina
 
-  @sandbox_token "fake token replace me"
-
   def client_factory() do
     %{
       # debug: true,
       sandbox: true,
-      token: @sandbox_token
+      token: JarTest.Secrets.sandbox_token()
     }
     |> Jar.configure()
   end

@@ -6,8 +6,6 @@ defmodule Jar do
   @doc """
   Configures a %Tesla.Client{} for our HTTP requests.
 
-  ## Examples
-
       iex> Jar.configure(sandbox: true, token: "asdf").__struct__
       Tesla.Client
   """
@@ -28,23 +26,15 @@ defmodule Jar do
 
   defp unpack_response(error), do: error
 
-  @doc """
-  Makes a GET request to the TaxJar API.
-
-  ## Examples
-
-      iex> Jar.configure(token: "asdf")
-      ...> |> Jar.get("/categories")
-      ...> |> case do {:error, resp} -> resp.status end
-      401
-  """
-  def get(client, path, options \\ []) do
+  # Make a GET request to the TaxJar API.
+  defp get(client, path, options \\ []) do
     client
     |> Tesla.get(path, options)
     |> unpack_response()
   end
 
-  def post(client, path, body, options \\ []) do
+  # Make a POST request to the TaxJar API.
+  defp post(client, path, body, options \\ []) do
     client
     |> Tesla.post(path, body, options)
     |> unpack_response()

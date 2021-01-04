@@ -8,12 +8,13 @@ defmodule JarTest do
     [client: build(:client)]
   end
 
-  test "`get` returns error when endpoint does not exist", %{client: client} do
-    assert {:error, %{status: "404"}} = Jar.get(client, "/asdf")
-  end
+  test "`configure` creates a %Tesla.Client{} when passed a valid map or %Jar.Config{}" do
+    config_map = build(:config_map)
+    config = Jar.Config.new(config_map)
 
-  test "`get` returns ok when endpoint exists", %{client: client} do
-    assert {:ok, %{}} = Jar.get(client, "/categories")
+    assert %Jar.Config{} = config
+    assert %Tesla.Client{} = Jar.configure(config)
+    assert %Tesla.Client{} = Jar.configure(config_map)
   end
 
   test "`list_tax_categories` returns tax categories", %{client: client} do

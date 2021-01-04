@@ -1,4 +1,13 @@
 defmodule Jar.Client do
+  @moduledoc """
+  Module for configuring our HTTP client to interact with the TaxJar API.
+  """
+
+  @doc """
+  Takes a `%Jar.Config{}` or the valid fields of a `%Jar.Config{}` as an enumerable.
+  Returns a `%Tesla.Client{}` that is configured to speak with the TaxJar API.
+  """
+
   def new(%Jar.Config{} = config) do
     base_url =
       if config.sandbox do

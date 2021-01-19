@@ -4,17 +4,21 @@ defmodule JarTest do
 
   import JarTest.Factory
 
-  setup_all do
-    [client: build(:client)]
-  end
-
-  test "`configure` creates a %Tesla.Client{} when passed a valid map or %Jar.Config{}" do
-    config_map = build(:config_map)
-    config = Jar.Config.new(config_map)
+  test "`configure` creates a %Tesla.Client{} when passed a valid set of vars or %Jar.Config{}" do
+    config_vars = [version: "v2", sandbox: true, debug: true, token: "foo"]
+    config = Jar.Config.new(config_vars)
 
     assert %Jar.Config{} = config
     assert %Tesla.Client{} = Jar.configure(config)
-    assert %Tesla.Client{} = Jar.configure(config_map)
+    assert %Tesla.Client{} = Jar.configure(config_vars)
+  end
+
+  test "`global` creates a %Tesla.Client{}" do
+    assert %Tesla.Client{} = Jar.global()
+  end
+
+  setup_all do
+    [client: Jar.global()]
   end
 
   test "`list_tax_categories` returns tax categories", %{client: client} do

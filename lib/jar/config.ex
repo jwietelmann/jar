@@ -24,4 +24,10 @@ defmodule Jar.Config do
   def new(fields) do
     struct!(__MODULE__, fields)
   end
+
+  def global() do
+    :jar
+    |> Application.get_env(__MODULE__)
+    |> new()
+  end
 end

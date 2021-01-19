@@ -2,4 +2,5 @@ import Config
 
 config :jar, Jar.Config,
   sandbox: true,
-  debug: false
+  debug: false,
+  mock_http: true

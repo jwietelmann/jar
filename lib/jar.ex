@@ -94,7 +94,7 @@ defmodule Jar do
   @doc """
   Validates an existing VAT identification number against VIES.
   """
-  def validate_vat_number(client, params \\ []), do: post(client, "/validation", params)
+  def validate_vat_number(client, params \\ []), do: get(client, "/validation", query: params)
 
   @doc """
   Lists minimum and average sales tax rates by region.

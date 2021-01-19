@@ -1,5 +1,5 @@
 defmodule Jar.Config do
-  defstruct version: "v2", sandbox: false, token: nil, debug: false
+  defstruct version: "v2", sandbox: false, token: nil, debug: false, mock_http: false
 
   @typedoc """
   Configuration for the API client.
@@ -14,7 +14,8 @@ defmodule Jar.Config do
           version: String.t(),
           sandbox: Boolean.t(),
           token: String.t(),
-          debug: Boolean.t()
+          debug: Boolean.t(),
+          mock_http: Boolean.t()
         }
 
   @doc """

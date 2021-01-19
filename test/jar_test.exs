@@ -1,24 +1,60 @@
 defmodule JarTest do
+  @moduledoc """
+  These tests deal with API endpoints that are available in the API sandbox.
+
+  HTTP responses are mocked when `config :jar, Jar.Config, mock_http: true`,
+  which is part of the default test configuration.
+  """
   use ExUnit.Case
   doctest Jar
 
   import JarTest.Factory
-
-  test "`configure` creates a %Tesla.Client{} when passed a valid set of vars or %Jar.Config{}" do
-    config_vars = [version: "v2", sandbox: true, debug: true, token: "foo"]
-    config = Jar.Config.new(config_vars)
-
-    assert %Jar.Config{} = config
-    assert %Tesla.Client{} = Jar.configure(config)
-    assert %Tesla.Client{} = Jar.configure(config_vars)
-  end
-
-  test "`global` creates a %Tesla.Client{}" do
-    assert %Tesla.Client{} = Jar.global()
-  end
+  import Tesla.Mock
 
   setup_all do
-    [client: Jar.global()]
+    [client: build(:sandbox_client)]
+  end
+
+  setup do
+    mock(fn
+      %{method: :get, url: "https://api.sandbox.taxjar.com/v2/categories"} ->
+        %Tesla.Env{
+          status: 200,
+          body: %{categories: [%{name: "", product_tax_code: "", description: ""}]}
+        }
+
+      %{method: :post, url: "https://api.sandbox.taxjar.com/v2/taxes"} ->
+        %Tesla.Env{
+          status: 200,
+          body: %{tax: %{jurisdictions: %{}, breakdown: %{}}}
+        }
+
+      %{method: :get, url: "https://api.sandbox.taxjar.com/v2/transactions/orders"} ->
+        %Tesla.Env{
+          status: 200,
+          body: %{orders: []}
+        }
+
+      %{method: :get, url: "https://api.sandbox.taxjar.com/v2/transactions/refunds"} ->
+        %Tesla.Env{
+          status: 200,
+          body: %{refunds: []}
+        }
+
+      %{method: :get, url: "https://api.sandbox.taxjar.com/v2/nexus/regions"} ->
+        %Tesla.Env{
+          status: 200,
+          body: %{regions: []}
+        }
+
+      %{method: :get, url: "https://api.sandbox.taxjar.com/v2/summary_rates"} ->
+        %Tesla.Env{
+          status: 200,
+          body: %{summary_rates: []}
+        }
+    end)
+
+    :ok
   end
 
   test "`list_tax_categories` returns tax categories", %{client: client} do
@@ -42,36 +78,10 @@ defmodule JarTest do
     assert is_list(refunds)
   end
 
-  # TODO: `list_customers` is not in the sandbox API.
-  # Use a production API token to test this endpoint in particular.
-
-  # test "`list_customers` returns customers", %{client: client} do
-  #   assert {:ok, %{customers: customers}} = Jar.list_customers(client)
-  #   assert is_list(customers)
-  # end
-
   test "`list_nexus_regions` returns nexus regions", %{client: client} do
     assert {:ok, %{regions: regions}} = Jar.list_nexus_regions(client)
     assert is_list(regions)
   end
-
-  # TODO: `validate_address` is not in the sandbox API.
-  # Use a production API token to test this endpoint in particular.
-
-  # test "`validate_address` returns address validation info", %{client: client} do
-  #   assert {:ok, %{addresses: addresses}} = Jar.validate_address(client)
-  #   assert is_list(addresses)
-  # end
-
-  # TODO: TaxJar doesn't even mention if this API endpoint is sandbox-supported here:
-  # https://support.taxjar.com/article/677-which-sandbox-endpoints-are-currently-supported
-  # Based on initial tests it's probably not.
-  # Use a production API token to test this endpoint in particular.
-
-  # test "`validate_vat_number` returns address validation info", %{client: client} do
-  #   assert {:ok, %{validation: validation}} = Jar.validate_vat_number(client) |> IO.inspect()
-  #   assert %{valid: _, exists: _, vies_available: _, vies_response: %{}} = validation
-  # end
 
   test "`list_summary_rates` returns summary rates", %{client: client} do
     assert {:ok, %{summary_rates: summary_rates}} = Jar.list_summary_rates(client)

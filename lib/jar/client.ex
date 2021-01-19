@@ -25,7 +25,11 @@ defmodule Jar.Client do
       {Tesla.Middleware.Logger, debug: config.debug}
     ]
 
-    Tesla.client(middleware)
+    if config.mock_http do
+      Tesla.client(middleware, Tesla.Mock)
+    else
+      Tesla.client(middleware)
+    end
   end
 
   def new(config) do

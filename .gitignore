@@ -27,3 +27,4 @@ jar-*.tar
 /tmp
 
 test/support/secrets.ex
+**/*.secret.exs

@@ -1,19 +1,6 @@
 defmodule JarTest.Factory do
   use ExMachina
 
-  def config_map_factory() do
-    %{
-      # debug: true,
-      sandbox: true,
-      token: JarTest.Secrets.sandbox_token()
-    }
-  end
-
-  def client_factory() do
-    config_map_factory()
-    |> Jar.configure()
-  end
-
   def tax_calc_params_factory() do
     %{
       from_country: "US",

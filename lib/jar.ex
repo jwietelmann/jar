@@ -11,6 +11,18 @@ defmodule Jar do
   """
   def configure(config), do: Jar.Client.new(config)
 
+  @doc """
+  Configures a %Tesla.Client{} using global configuration.
+
+      config :jar, Jar.Config,
+        version: "v2",
+        sandbox: true,
+        token: System.get_env("JAR_TOKEN"),
+        debug: true
+  """
+
+  def global(), do: Jar.Client.new(Jar.Config.global())
+
   # Extract the body from successful responses.
 
   defp unpack_response({:ok, %{status: status, body: body}}) do

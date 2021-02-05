@@ -8,6 +8,7 @@ defmodule Jar.Config do
   * `:sandbox` - If `true`, requests use the Sandbox API. Defaults to `false`.
   * `:token` - Your API auth token.
   * `:debug` - If `true`, turns on Tesla debug mode. Defaults to `false`.
+  * `:mock_http` - If `true`, requests/responses are mocked, using the `Tesla.Mock` adapter. Defaults to `false`.
   """
 
   @type t :: %__MODULE__{

@@ -2,6 +2,52 @@
 
 An example TaxJar API client.
 
+## Usage
+
+Jar can be configured globally.
+
+```elixir
+import Config
+
+config :jar, Jar.Config,
+  token: "your api token",
+  sandbox: false,
+  debug: false,
+  mock_http: false
+```
+
+The global client can be fetched like this:
+
+```elixir
+client = Jar.global()
+```
+
+Clients can also be configured at runtime.
+
+```elixir
+client = Jar.configure(%{
+  token: "your api token",
+  sandbox: false,
+  debug: false,
+  mock_http: false
+%})
+```
+
+API functions take your `%Jar.Client{}` as the first argument.
+Here's an example API call to validate an address, using global configuration:
+
+```elixir
+Jar.validate_address(client, %{
+  country: "US",
+  state: "AZ",
+  zip: "85297",
+  city: "Gilbert",
+  street: "3301 South Greenfield Rd"
+})
+
+# {:ok, %{addresses: [...]}}
+```
+
 ## Testing
 
 By default, tests run against mocks.
